@@ -4,11 +4,15 @@ import Button from "@/components/Button";
 import Repolist from "@/components/Repolist";
 import { useState } from 'react';
 import { User } from '../types/User';
+import { SearchRes } from '../types/SearchRes';
+import { json } from "stream/consumers";
 
 export default function Repository() {
 
     const [isLoading,setIsLoading]=useState(false)
     const [search,setSearch]=useState("")
+    const [result,setResult] = useState<SearchRes | null>(null)
+
     const onSubmitSearch=(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         if(search){
@@ -16,7 +20,12 @@ export default function Repository() {
             fetch(`https://api.github.com/search/repositories?q=${search}`)
             .then(res=>res.json())    
             .then(data=>{
-                console.log(data)
+                const login : User[]=data.items
+                const searchRes:SearchRes={
+                    search:search,
+                    login:login
+                   }
+                  setResult(searchRes)
                 }).finally(()=>{
                     setIsLoading(false)  
                 }
@@ -32,7 +41,8 @@ export default function Repository() {
             <Form value={search} onChange={(e)=>setSearch(e.target.value)}/>
             <Button type='submit' isLoading={isLoading}/>
         </form>
-        {search}
+        {result && <Repolist result={result}/>}
+        {JSON.stringify(result)}
         </div>
         </Layout>
         )
