@@ -8,7 +8,7 @@ export default function Repository() {
         <div>
          <form>
             <Form />
-            <Button />
+            <Button type='submit' isLoading={false}/>
          </form>
         </div>
         </Layout>
