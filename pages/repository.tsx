@@ -9,24 +9,20 @@ export default function Repository() {
 
     const [isLoading,setIsLoading]=useState(false)
     const [search,setSearch]=useState("")
-    const [result,setResult] = useState<SearchRes | null>(null)
     const onSubmitSearch=(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         if(search){
             setIsLoading(true)
-            fetch(`https://api.github.com/search/users?q=${search}&per_page=20`)
-                  .then(res=>res.json())
-                  .then(data=>{
-                     const users : User[] = data.items
-                     const searchRes:SearchRes={
-                      search:search,
-                      users:users
-                     }
-                    setResult(searchRes)
-                  }).finally(()=>{
-                    setIsLoading(false)
-                  })
-         }
+            fetch(`https://api.github.com/search/repositories?q=${search}`)
+            .then(res=>res.json())    
+            .then(data=>{
+                console.log(data)
+                }).finally(()=>{
+                    setIsLoading(false)  
+                }
+                )
+        }
+        
     }
 
     return(
@@ -36,7 +32,7 @@ export default function Repository() {
             <Form value={search} onChange={(e)=>setSearch(e.target.value)}/>
             <Button type='submit' isLoading={isLoading}/>
         </form>
-        {result && <Repolist result={result}/>}
+        {search}
         </div>
         </Layout>
         )
